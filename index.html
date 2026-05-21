@@ -41,41 +41,6 @@
           margin-bottom: 10px;
       }
 
-      .info-form {
-          background: #f8f9fa;
-          padding: 25px;
-          border-radius: 15px;
-          margin-bottom: 30px;
-      }
-
-      .form-group {
-          margin-bottom: 20px;
-      }
-
-      .form-group label {
-          display: block;
-          font-weight: bold;
-          margin-bottom: 8px;
-          color: #333;
-          font-size: 1.1em;
-      }
-
-      .form-group input,
-      .form-group select {
-          width: 100%;
-          padding: 12px;
-          border: 2px solid #ddd;
-          border-radius: 8px;
-          font-size: 1em;
-          transition: border-color 0.3s;
-      }
-
-      .form-group input:focus,
-      .form-group select:focus {
-          outline: none;
-          border-color: #667eea;
-      }
-
       .progress-bar {
           width: 100%;
           height: 10px;
@@ -138,12 +103,27 @@
           border-color: #764ba2;
       }
 
+      .option.correct {
+          background: #4caf50;
+          color: white;
+          border-color: #45a049;
+      }
+
+      .option.wrong {
+          background: #f44336;
+          color: white;
+          border-color: #da190b;
+      }
+
+      .option.disabled {
+          cursor: not-allowed;
+          opacity: 0.7;
+      }
+
       .button-container {
           display: flex;
           justify-content: center;
-          gap: 15px;
           margin-top: 30px;
-          flex-wrap: wrap;
       }
 
       .btn {
@@ -168,10 +148,6 @@
           transform: none;
       }
 
-      .btn-secondary {
-          background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-      }
-
       .result-container {
           text-align: center;
           display: none;
@@ -194,71 +170,30 @@
           margin: 20px 0;
       }
 
-      .answer-summary {
-          background: #f8f9fa;
-          padding: 25px;
-          border-radius: 15px;
-          margin: 25px 0;
-          text-align: left;
+      .restart-btn {
+          margin-top: 30px;
       }
 
-      .answer-item {
+      .feedback {
+          margin-top: 15px;
           padding: 15px;
-          margin: 10px 0;
-          border-radius: 8px;
-          background: white;
-      }
-
-      .answer-item.correct {
-          border-left: 5px solid #4caf50;
-      }
-
-      .answer-item.wrong {
-          border-left: 5px solid #f44336;
-      }
-
-      .answer-item h4 {
-          color: #667eea;
-          margin-bottom: 8px;
-      }
-
-      .answer-detail {
-          font-size: 0.95em;
-          color: #666;
-          margin-top: 5px;
-      }
-
-      .upload-status {
-          margin-top: 20px;
-          padding: 15px;
-          border-radius: 8px;
+          border-radius: 10px;
+          font-size: 1.1em;
           display: none;
       }
 
-      .upload-status.success {
+      .feedback.show {
+          display: block;
+      }
+
+      .feedback.correct {
           background: #d4edda;
           color: #155724;
-          display: block;
       }
 
-      .upload-status.error {
+      .feedback.wrong {
           background: #f8d7da;
           color: #721c24;
-          display: block;
-      }
-
-      .upload-status.loading {
-          background: #cce5ff;
-          color: #004085;
-          display: block;
-      }
-
-      .start-section {
-          display: block;
-      }
-
-      .start-section.hide {
-          display: none;
       }
 
       @media (max-width: 600px) {
@@ -282,10 +217,6 @@
           .score {
               font-size: 3em;
           }
-
-          .button-container {
-              flex-direction: column;
-          }
       }
   </style>
 </head>
@@ -293,52 +224,26 @@
   <div class="container">
       <div class="header">
           <h1>📝 線上答題系統</h1>
-          <p style="color: #666;">答題結果將自動上傳到雲端</p>
       </div>
 
-      <div id="startSection" class="start-section">
-          <div class="info-form">
-              <h3 style="margin-bottom: 20px; color: #667eea;">請填寫基本資料</h3>
-              <div class="form-group">
-                  <label for="userName">姓名 *</label>
-                  <input type="text" id="userName" placeholder="請輸入您的姓名" required>
-              </div>
-              <div class="form-group">
-                  <label for="userEmail">電子郵件</label>
-                  <input type="email" id="userEmail" placeholder="example@email.com">
-              </div>
-              <div class="form-group">
-                  <label for="userClass">班級/組別</label>
-                  <input type="text" id="userClass" placeholder="例如：三年一班">
-              </div>
-              <div class="form-group">
-                  <label for="userID">學號/編號</label>
-                  <input type="text" id="userID" placeholder="請輸入學號或編號">
-              </div>
-          </div>
-          <div class="button-container">
-              <button class="btn" onclick="startQuiz()">開始答題</button>
-          </div>
-      </div>
-
-      <div id="quizSection" style="display: none;">
+      <div id="quizSection">
           <div class="progress-bar">
               <div class="progress-fill" id="progressBar"></div>
           </div>
 
           <div class="quiz-info">
               <span>題目 <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span></span>
-              <span>已答題數: <span id="answeredCount">0</span></span>
+              <span>得分: <span id="score">0</span></span>
           </div>
 
           <div class="question-container">
               <div class="question" id="question"></div>
               <div class="options" id="options"></div>
+              <div class="feedback" id="feedback"></div>
           </div>
 
           <div class="button-container">
-              <button class="btn" id="prevBtn" onclick="prevQuestion()" style="display: none;">上一題</button>
-              <button class="btn" id="nextBtn" onclick="nextQuestion()">下一題</button>
+              <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>下一題</button>
           </div>
       </div>
 
@@ -346,29 +251,12 @@
           <h2 class="result-message">🎉 測驗完成！</h2>
           <div class="score" id="finalScore"></div>
           <p class="result-message" id="resultMessage"></p>
-
-          <div class="upload-status" id="uploadStatus"></div>
-
-          <div class="answer-summary" id="answerSummary"></div>
-
-          <div style="margin-top: 30px; padding: 20px; background: #e3f2fd; border-radius: 10px;">
-              <h3 style="color: #667eea; margin-bottom: 15px;">📥 下載答題記錄</h3>
-              <div class="button-container">
-                  <button class="btn btn-secondary" onclick="downloadResults()">下載 TXT</button>
-                  <button class="btn btn-secondary" onclick="downloadCSV()">下載 CSV</button>
-              </div>
-          </div>
-
-          <div class="button-container" style="margin-top: 30px;">
-              <button class="btn" onclick="restartQuiz()">重新開始</button>
-          </div>
+          <button class="btn restart-btn" onclick="restartQuiz()">重新開始</button>
       </div>
   </div>
 
   <script>
-      const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
-
-      
+      // 題庫資料 - 你可以在這裡修改或新增題目
       const quizData = [
           {
               question: "台灣最高的山是哪一座？",
@@ -398,40 +286,19 @@
       ];
 
       let currentQuestionIndex = 0;
-      let userAnswers = [];
-      let userInfo = {};
+      let score = 0;
+      let selectedAnswer = null;
 
-      function startQuiz() {
-          const name = document.getElementById('userName').value.trim();
-          
-          if (!name) {
-              alert('請輸入姓名！');
-              return;
-          }
-
-          userInfo = {
-              name: name,
-              email: document.getElementById('userEmail').value.trim(),
-              class: document.getElementById('userClass').value.trim(),
-              id: document.getElementById('userID').value.trim(),
-              startTime: new Date().toLocaleString('zh-TW')
-          };
-
-          document.getElementById('startSection').classList.add('hide');
-          document.getElementById('quizSection').style.display = 'block';
-          
-          userAnswers = new Array(quizData.length).fill(null);
-          initQuiz();
-      }
-
+      // 初始化測驗
       function initQuiz() {
           document.getElementById('totalQuestions').textContent = quizData.length;
           loadQuestion();
       }
 
+      // 載入題目
       function loadQuestion() {
           const current = quizData[currentQuestionIndex];
-          document.getElementById('question').textContent = `${currentQuestionIndex + 1}. ${current.question}`;
+          document.getElementById('question').textContent = current.question;
           document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
           
           const optionsContainer = document.getElementById('options');
@@ -440,73 +307,64 @@
           current.options.forEach((option, index) => {
               const optionDiv = document.createElement('div');
               optionDiv.className = 'option';
-              if (userAnswers[currentQuestionIndex] === index) {
-                  optionDiv.classList.add('selected');
-              }
               optionDiv.textContent = option;
               optionDiv.onclick = () => selectOption(index);
               optionsContainer.appendChild(optionDiv);
           });
 
+          document.getElementById('feedback').classList.remove('show');
+          document.getElementById('nextBtn').disabled = true;
+          selectedAnswer = null;
+
           updateProgress();
-          updateButtons();
-          updateAnsweredCount();
       }
 
+      // 選擇答案
       function selectOption(index) {
-          userAnswers[currentQuestionIndex] = index;
-          
+          if (selectedAnswer !== null) return;
+
+          selectedAnswer = index;
           const options = document.querySelectorAll('.option');
-          options.forEach(opt => opt.classList.remove('selected'));
-          options[index].classList.add('selected');
+          const current = quizData[currentQuestionIndex];
+          const feedback = document.getElementById('feedback');
+
+          options.forEach(opt => opt.classList.add('disabled'));
           
-          updateAnsweredCount();
-      }
-
-      function prevQuestion() {
-          if (currentQuestionIndex > 0) {
-              currentQuestionIndex--;
-              loadQuestion();
+          if (index === current.correct) {
+              options[index].classList.add('correct');
+              score += 10;
+              document.getElementById('score').textContent = score;
+              feedback.textContent = '✓ 答對了！太棒了！';
+              feedback.className = 'feedback correct show';
+          } else {
+              options[index].classList.add('wrong');
+              options[current.correct].classList.add('correct');
+              feedback.textContent = '✗ 答錯了！正確答案是：' + current.options[current.correct];
+              feedback.className = 'feedback wrong show';
           }
+
+          document.getElementById('nextBtn').disabled = false;
       }
 
+      // 下一題
       function nextQuestion() {
-          if (currentQuestionIndex < quizData.length - 1) {
-              currentQuestionIndex++;
+          currentQuestionIndex++;
+          
+          if (currentQuestionIndex < quizData.length) {
               loadQuestion();
           } else {
               showResults();
           }
       }
 
-      function updateButtons() {
-          document.getElementById('prevBtn').style.display = 
-              currentQuestionIndex > 0 ? 'inline-block' : 'none';
-          
-          document.getElementById('nextBtn').textContent = 
-              currentQuestionIndex === quizData.length - 1 ? '提交答案' : '下一題';
-      }
-
-      function updateAnsweredCount() {
-          const answered = userAnswers.filter(a => a !== null).length;
-          document.getElementById('answeredCount').textContent = answered;
-      }
-
+      // 更新進度條
       function updateProgress() {
           const progress = ((currentQuestionIndex + 1) / quizData.length) * 100;
           document.getElementById('progressBar').style.width = progress + '%';
       }
 
-      async function showResults() {
-          userInfo.endTime = new Date().toLocaleString('zh-TW');
-          
-          let score = 0;
-          quizData.forEach((q, index) => {
-              if (userAnswers[index] === q.correct) {
-                  score += 10;
-              }
-          });
-
+      // 顯示結果
+      function showResults() {
           document.getElementById('quizSection').style.display = 'none';
           document.getElementById('resultSection').classList.add('show');
           document.getElementById('finalScore').textContent = score + ' / ' + (quizData.length * 10);
@@ -525,163 +383,21 @@
           }
           
           document.getElementById('resultMessage').textContent = message;
-          showAnswerSummary();
-          
-          // 自動上傳到試算表
-          await uploadToSheet();
       }
 
-      function showAnswerSummary() {
-          const summaryContainer = document.getElementById('answerSummary');
-          summaryContainer.innerHTML = '<h3 style="color: #667eea; margin-bottom: 15px;">📋 答題詳情</h3>';
-          
-          quizData.forEach((q, index) => {
-              const userAnswer = userAnswers[index];
-              const isCorrect = userAnswer === q.correct;
-              
-              const answerItem = document.createElement('div');
-              answerItem.className = `answer-item ${isCorrect ? 'correct' : 'wrong'}`;
-              
-              answerItem.innerHTML = `
-                  <h4>第 ${index + 1} 題：${q.question}</h4>
-                  <div class="answer-detail">
-                      <strong>你的答案：</strong>${userAnswer !== null ? q.options[userAnswer] : '未作答'} 
-                      ${isCorrect ? '✓' : '✗'}
-                  </div>
-                  ${!isCorrect ? `<div class="answer-detail"><strong>正確答案：</strong>${q.options[q.correct]}</div>` : ''}
-              `;
-              
-              summaryContainer.appendChild(answerItem);
-          });
-      }
-
-      async function uploadToSheet() {
-          const statusDiv = document.getElementById('uploadStatus');
-          statusDiv.className = 'upload-status loading';
-          statusDiv.textContent = '⏳ 正在自動上傳到 Google 試算表...';
-
-          let score = 0;
-          let correctCount = 0;
-          let details = '';
-
-          quizData.forEach((q, index) => {
-              const userAnswer = userAnswers[index];
-              const isCorrect = userAnswer === q.correct;
-              if (isCorrect) {
-                  score += 10;
-                  correctCount++;
-              }
-              details += `Q${index + 1}: ${userAnswer !== null ? q.options[userAnswer] : '未作答'} (${isCorrect ? '✓' : '✗'}); `;
-          });
-
-          const data = {
-              timestamp: new Date().toLocaleString('zh-TW'),
-              name: userInfo.name,
-              email: userInfo.email || '-',
-              class: userInfo.class || '-',
-              id: userInfo.id || '-',
-              score: score,
-              correctCount: correctCount,
-              details: details
-          };
-
-          try {
-              const response = await fetch(SCRIPT_URL, {
-                  method: 'POST',
-                  mode: 'no-cors',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(data)
-              });
-
-              statusDiv.className = 'upload-status success';
-              statusDiv.textContent = '✅ 上傳成功！結果已自動儲存到 Google 試算表';
-          } catch (error) {
-              statusDiv.className = 'upload-status error';
-              statusDiv.textContent = '❌ 自動上傳失敗：' + error.message + '\n請聯絡管理員或稍後下載檔案';
-          }
-      }
-
-      function downloadResults() {
-          let content = '='.repeat(50) + '\n';
-          content += '線上答題系統 - 答題結果\n';
-          content += '='.repeat(50) + '\n\n';
-          
-          content += '【基本資料】\n';
-          content += `姓名：${userInfo.name}\n`;
-          if (userInfo.email) content += `電子郵件：${userInfo.email}\n`;
-          if (userInfo.class) content += `班級/組別：${userInfo.class}\n`;
-          if (userInfo.id) content += `學號/編號：${userInfo.id}\n`;
-          content += `開始時間：${userInfo.startTime}\n`;
-          content += `結束時間：${userInfo.endTime}\n\n`;
-          
-          let score = 0;
-          quizData.forEach((q, index) => {
-              if (userAnswers[index] === q.correct) score += 10;
-          });
-          
-          content += '【測驗結果】\n';
-          content += `總分：${score} / ${quizData.length * 10}\n`;
-          content += `答對題數：${userAnswers.filter((a, i) => a === quizData[i].correct).length} / ${quizData.length}\n\n`;
-          
-          content += '【答題詳情】\n';
-          content += '-'.repeat(50) + '\n';
-          
-          quizData.forEach((q, index) => {
-              const userAnswer = userAnswers[index];
-              const isCorrect = userAnswer === q.correct;
-              
-              content += `\n第 ${index + 1} 題：${q.question}\n`;
-              content += `你的答案：${userAnswer !== null ? q.options[userAnswer] : '未作答'} ${isCorrect ? '✓ 正確' : '✗ 錯誤'}\n`;
-              if (!isCorrect) {
-                  content += `正確答案：${q.options[q.correct]}\n`;
-              }
-              content += '-'.repeat(50) + '\n';
-          });
-          
-          const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = `答題結果_${userInfo.name}_${new Date().getTime()}.txt`;
-          link.click();
-      }
-
-      function downloadCSV() {
-          let csv = '\uFEFF';
-          csv += '題號,題目,你的答案,正確答案,結果\n';
-          
-          quizData.forEach((q, index) => {
-              const userAnswer = userAnswers[index];
-              const isCorrect = userAnswer === q.correct;
-              
-              csv += `${index + 1},"${q.question}",`;
-              csv += `"${userAnswer !== null ? q.options[userAnswer] : '未作答'}",`;
-              csv += `"${q.options[q.correct]}",`;
-              csv += `${isCorrect ? '正確' : '錯誤'}\n`;
-          });
-          
-          const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-          const link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.download = `答題結果_${userInfo.name}_${new Date().getTime()}.csv`;
-          link.click();
-      }
-
+      // 重新開始
       function restartQuiz() {
           currentQuestionIndex = 0;
-          userAnswers = [];
-          userInfo = {};
-          
-          document.getElementById('userName').value = '';
-          document.getElementById('userEmail').value = '';
-          document.getElementById('userClass').value = '';
-          document.getElementById('userID').value = '';
-          
+          score = 0;
+          selectedAnswer = null;
+          document.getElementById('score').textContent = '0';
+          document.getElementById('quizSection').style.display = 'block';
           document.getElementById('resultSection').classList.remove('show');
-          document.getElementById('startSection').classList.remove('hide');
-          document.getElementById('uploadStatus').className = 'upload-status';
+          initQuiz();
       }
+
+      // 啟動測驗
+      initQuiz();
   </script>
 </body>
 </html>
