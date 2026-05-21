@@ -296,6 +296,7 @@
           <p style="color: #666;">答題結果將自動上傳到雲端</p>
       </div>
 
+      <!-- 開始頁面：填寫基本資料 -->
       <div id="startSection" class="start-section">
           <div class="info-form">
               <h3 style="margin-bottom: 20px; color: #667eea;">請填寫基本資料</h3>
@@ -321,6 +322,7 @@
           </div>
       </div>
 
+      <!-- 答題頁面 -->
       <div id="quizSection" style="display: none;">
           <div class="progress-bar">
               <div class="progress-fill" id="progressBar"></div>
@@ -342,6 +344,7 @@
           </div>
       </div>
 
+      <!-- 結果頁面 -->
       <div class="result-container" id="resultSection">
           <h2 class="result-message">🎉 測驗完成！</h2>
           <div class="score" id="finalScore"></div>
@@ -366,9 +369,11 @@
   </div>
 
   <script>
+      // ⚙️ 在這裡設定你的 Google Apps Script 網址
+      // 將下面的網址替換成你自己的部署網址
       const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwuOzxvqCfvkfxvxUPJXB9MOARMol2GoGEGZ4NBMhlmdXEIOzEy1TLSxaZTuDWH4Y57jQ/exec';
-
       
+      // 題庫資料
       const quizData = [
           {
               question: "台灣最高的山是哪一座？",
@@ -401,6 +406,7 @@
       let userAnswers = [];
       let userInfo = {};
 
+      // 開始測驗
       function startQuiz() {
           const name = document.getElementById('userName').value.trim();
           
@@ -475,6 +481,7 @@
               currentQuestionIndex++;
               loadQuestion();
           } else {
+              // 答題完成，自動上傳
               showResults();
           }
       }
@@ -555,6 +562,7 @@
           });
       }
 
+      // 自動上傳到 Google 試算表
       async function uploadToSheet() {
           const statusDiv = document.getElementById('uploadStatus');
           statusDiv.className = 'upload-status loading';
@@ -603,6 +611,7 @@
           }
       }
 
+      // 下載 TXT 結果
       function downloadResults() {
           let content = '='.repeat(50) + '\n';
           content += '線上答題系統 - 答題結果\n';
@@ -647,6 +656,7 @@
           link.click();
       }
 
+      // 下載 CSV 結果
       function downloadCSV() {
           let csv = '\uFEFF';
           csv += '題號,題目,你的答案,正確答案,結果\n';
