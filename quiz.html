@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>線上答題系統</title>
+  <title>線上答題系統 - 教學策略測驗</title>
   <style>
       * {
           margin: 0;
@@ -109,6 +109,7 @@
           color: #333;
           margin-bottom: 25px;
           font-weight: bold;
+          line-height: 1.5;
       }
 
       .options {
@@ -125,6 +126,7 @@
           transition: all 0.3s ease;
           border: 2px solid transparent;
           font-size: 1.1em;
+          line-height: 1.6;
       }
 
       .option:hover {
@@ -220,12 +222,14 @@
       .answer-item h4 {
           color: #667eea;
           margin-bottom: 8px;
+          line-height: 1.6;
       }
 
       .answer-detail {
           font-size: 0.95em;
           color: #666;
           margin-top: 5px;
+          line-height: 1.5;
       }
 
       .upload-status {
@@ -292,11 +296,10 @@
 <body>
   <div class="container">
       <div class="header">
-          <h1>📝 線上答題系統</h1>
+          <h1>📝 教學策略測驗</h1>
           <p style="color: #666;">答題結果將自動上傳到雲端</p>
       </div>
 
-      <!-- 開始頁面：填寫基本資料 -->
       <div id="startSection" class="start-section">
           <div class="info-form">
               <h3 style="margin-bottom: 20px; color: #667eea;">請填寫基本資料</h3>
@@ -322,14 +325,13 @@
           </div>
       </div>
 
-      <!-- 答題頁面 -->
       <div id="quizSection" style="display: none;">
           <div class="progress-bar">
               <div class="progress-fill" id="progressBar"></div>
           </div>
 
           <div class="quiz-info">
-              <span>題目 <span id="currentQuestion">1</span> / <span id="totalQuestions">5</span></span>
+              <span>題目 <span id="currentQuestion">1</span> / <span id="totalQuestions">8</span></span>
               <span>已答題數: <span id="answeredCount">0</span></span>
           </div>
 
@@ -344,7 +346,6 @@
           </div>
       </div>
 
-      <!-- 結果頁面 -->
       <div class="result-container" id="resultSection">
           <h2 class="result-message">🎉 測驗完成！</h2>
           <div class="score" id="finalScore"></div>
@@ -369,36 +370,89 @@
   </div>
 
   <script>
-      // ⚙️ 在這裡設定你的 Google Apps Script 網址
-      // 將下面的網址替換成你自己的部署網址
       const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwuOzxvqCfvkfxvxUPJXB9MOARMol2GoGEGZ4NBMhlmdXEIOzEy1TLSxaZTuDWH4Y57jQ/exec';
       
-      // 題庫資料
+      // 題庫資料 - 教學策略測驗
       const quizData = [
           {
-              question: "台灣最高的山是哪一座？",
-              options: ["玉山", "雪山", "合歡山", "阿里山"],
+              question: "下列何者最能說明「教學策略」的意義？",
+              options: [
+                  "教師在課堂中臨時想到的教學活動",
+                  "為達成課程目標，對內容、流程、教材與評量進行的整體規劃",
+                  "學生自行選擇喜歡的學習工具",
+                  "只負責設計期末考試題目"
+              ],
+              correct: 1
+          },
+          {
+              question: "關於「教學策略」與「教學方法」的差異，下列敘述何者正確？",
+              options: [
+                  "教學策略偏向整體規劃，教學方法偏向具體教學做法",
+                  "教學策略只適用於實體課程，教學方法只適用於線上課程",
+                  "教學策略與教學方法完全相同，沒有任何差異",
+                  "教學方法只負責評量，教學策略只負責點名"
+              ],
               correct: 0
           },
           {
-              question: "以下哪個不是台灣的直轄市？",
-              options: ["台北市", "新竹市", "高雄市", "台南市"],
-              correct: 1
-          },
-          {
-              question: "珍珠奶茶起源於台灣哪個城市？",
-              options: ["台北", "台中", "台南", "高雄"],
-              correct: 1
-          },
-          {
-              question: "台灣的國花是什麼？",
-              options: ["櫻花", "梅花", "蓮花", "牡丹"],
-              correct: 1
-          },
-          {
-              question: "以下哪個是台灣的傳統節慶？",
-              options: ["聖誕節", "感恩節", "端午節", "萬聖節"],
+              question: "下列何者屬於設計數位課程內容架構的正確步驟？",
+              options: [
+                  "隨機安排單元內容，不需要考慮學習順序",
+                  "先進行期末考，再決定課程主題",
+                  "劃分課程單元、規劃課程大綱、繪製課程概念圖、規劃學習流程",
+                  "只要選擇漂亮的背景圖片即可完成課程架構設計"
+              ],
               correct: 2
+          },
+          {
+              question: "下列何者屬於設計數位課程內容架構的正確步驟？",
+              options: [
+                  "隨機安排單元內容，不需要考慮學習順序",
+                  "先進行期末考，再決定課程主題",
+                  "劃分課程單元、規劃課程大綱、繪製課程概念圖、規劃學習流程",
+                  "只要選擇漂亮的背景圖片即可完成課程架構設計"
+              ],
+              correct: 2
+          },
+          {
+              question: "下列何者屬於「導覽式」數位教材的適合應用？",
+              options: [
+                  "使用螢幕錄製示範軟體操作流程",
+                  "只提供一份紙本講義",
+                  "讓學生完全不看教材，只自行猜測操作方式",
+                  "只用口頭說明，不提供任何畫面或步驟"
+              ],
+              correct: 0
+          },
+          {
+              question: "下列何者屬於「前測」的主要目的？",
+              options: [
+                  "在教學前了解學習者的先備知識與能力",
+                  "在課程結束後才決定教學目標",
+                  "用來取代所有教學活動",
+                  "只用來統計學生出席率"
+              ],
+              correct: 0
+          },
+          {
+              question: "下列何者最能說明數位教材中「介面設計」的主要目的？",
+              options: [
+                  "讓教材畫面越複雜越好，增加學習者操作挑戰",
+                  "讓學習者能清楚操作教材、掌握進度，並專注於學習內容",
+                  "只負責決定教材中的考試分數與配分方式",
+                  "讓所有功能都隱藏起來，避免學習者使用太多工具"
+              ],
+              correct: 1
+          },
+          {
+              question: "下列何者最符合數位教材中「腳本設計」的意義？",
+              options: [
+                  "只負責設計教材封面圖片，不需要考慮內容與互動",
+                  "將學習內容、畫面設計、多媒體素材與互動方式具體寫成開發文件",
+                  "只記錄學生的出席情形與成績",
+                  "只安排教室座位與上課時間"
+              ],
+              correct: 1
           }
       ];
 
@@ -406,7 +460,6 @@
       let userAnswers = [];
       let userInfo = {};
 
-      // 開始測驗
       function startQuiz() {
           const name = document.getElementById('userName').value.trim();
           
@@ -449,7 +502,7 @@
               if (userAnswers[currentQuestionIndex] === index) {
                   optionDiv.classList.add('selected');
               }
-              optionDiv.textContent = option;
+              optionDiv.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
               optionDiv.onclick = () => selectOption(index);
               optionsContainer.appendChild(optionDiv);
           });
@@ -481,7 +534,6 @@
               currentQuestionIndex++;
               loadQuestion();
           } else {
-              // 答題完成，自動上傳
               showResults();
           }
       }
@@ -552,17 +604,16 @@
               answerItem.innerHTML = `
                   <h4>第 ${index + 1} 題：${q.question}</h4>
                   <div class="answer-detail">
-                      <strong>你的答案：</strong>${userAnswer !== null ? q.options[userAnswer] : '未作答'} 
+                      <strong>你的答案：</strong>${userAnswer !== null ? String.fromCharCode(65 + userAnswer) + '. ' + q.options[userAnswer] : '未作答'} 
                       ${isCorrect ? '✓' : '✗'}
                   </div>
-                  ${!isCorrect ? `<div class="answer-detail"><strong>正確答案：</strong>${q.options[q.correct]}</div>` : ''}
+                  ${!isCorrect ? `<div class="answer-detail"><strong>正確答案：</strong>${String.fromCharCode(65 + q.correct)}. ${q.options[q.correct]}</div>` : ''}
               `;
               
               summaryContainer.appendChild(answerItem);
           });
       }
 
-      // 自動上傳到 Google 試算表
       async function uploadToSheet() {
           const statusDiv = document.getElementById('uploadStatus');
           statusDiv.className = 'upload-status loading';
@@ -579,7 +630,7 @@
                   score += 10;
                   correctCount++;
               }
-              details += `Q${index + 1}: ${userAnswer !== null ? q.options[userAnswer] : '未作答'} (${isCorrect ? '✓' : '✗'}); `;
+              details += `Q${index + 1}: ${userAnswer !== null ? String.fromCharCode(65 + userAnswer) : '未作答'} (${isCorrect ? '✓' : '✗'}); `;
           });
 
           const data = {
@@ -611,10 +662,9 @@
           }
       }
 
-      // 下載 TXT 結果
       function downloadResults() {
           let content = '='.repeat(50) + '\n';
-          content += '線上答題系統 - 答題結果\n';
+          content += '教學策略測驗 - 答題結果\n';
           content += '='.repeat(50) + '\n\n';
           
           content += '【基本資料】\n';
@@ -642,9 +692,9 @@
               const isCorrect = userAnswer === q.correct;
               
               content += `\n第 ${index + 1} 題：${q.question}\n`;
-              content += `你的答案：${userAnswer !== null ? q.options[userAnswer] : '未作答'} ${isCorrect ? '✓ 正確' : '✗ 錯誤'}\n`;
+              content += `你的答案：${userAnswer !== null ? String.fromCharCode(65 + userAnswer) + '. ' + q.options[userAnswer] : '未作答'} ${isCorrect ? '✓ 正確' : '✗ 錯誤'}\n`;
               if (!isCorrect) {
-                  content += `正確答案：${q.options[q.correct]}\n`;
+                  content += `正確答案：${String.fromCharCode(65 + q.correct)}. ${q.options[q.correct]}\n`;
               }
               content += '-'.repeat(50) + '\n';
           });
@@ -652,11 +702,10 @@
           const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          link.download = `答題結果_${userInfo.name}_${new Date().getTime()}.txt`;
+          link.download = `教學策略測驗_${userInfo.name}_${new Date().getTime()}.txt`;
           link.click();
       }
 
-      // 下載 CSV 結果
       function downloadCSV() {
           let csv = '\uFEFF';
           csv += '題號,題目,你的答案,正確答案,結果\n';
@@ -666,15 +715,15 @@
               const isCorrect = userAnswer === q.correct;
               
               csv += `${index + 1},"${q.question}",`;
-              csv += `"${userAnswer !== null ? q.options[userAnswer] : '未作答'}",`;
-              csv += `"${q.options[q.correct]}",`;
+              csv += `"${userAnswer !== null ? String.fromCharCode(65 + userAnswer) + '. ' + q.options[userAnswer] : '未作答'}",`;
+              csv += `"${String.fromCharCode(65 + q.correct)}. ${q.options[q.correct]}",`;
               csv += `${isCorrect ? '正確' : '錯誤'}\n`;
           });
           
           const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
-          link.download = `答題結果_${userInfo.name}_${new Date().getTime()}.csv`;
+          link.download = `教學策略測驗_${userInfo.name}_${new Date().getTime()}.csv`;
           link.click();
       }
 
